@@ -176,6 +176,11 @@ def SEND_MESSAGE(op):
                     client.kickoutFromGroup(msg.to, [key])
                     contact = client.getContact(key)
                     sendMessage(msg.to, ""+contact.displayName+"sorry")
+                if "#bye" in msg.text:
+                    gr = client._client.getGroup(GROUPID)             
+                    member = gr.members
+                    for g in member:
+                     client._client.kickoutFromGroup(0, GROUPID, [g.mid])
                 if "nk:" in msg.text:
                     key = msg.text[3:]
                     group = client.getGroup(msg.to)
