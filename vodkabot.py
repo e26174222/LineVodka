@@ -193,15 +193,15 @@ def SEND_MESSAGE(op):
                         contact = client.getContact(Mids[kazu])
                         sendMessage(msg.to, ""+contact.displayName+"掰掰傻逼")
                     else:
-                        sendMessage(msg.to, "有這個人北七")
+                        sendMessage(msg.to, "沒有有這個人北七")
                 if msg.text == "cancel":
                     group = client.getGroup(msg.to)
                     if group.invitee is None:
-                        sendMessage(op.message.to, "沒有邀請哦")
+                        sendMessage(op.message.to, "沒有邀請")
                     else:
                         gInviMids = [contact.mid for contact in group.invitee]
                         client.cancelGroupInvitation(msg.to, gInviMids)
-                        sendMessage(msg.to, str(len(group.invitee)) + "個已被取消")
+                        sendMessage(msg.to, str(len(group.invitee)) + "個已取消")
                 if "invite:" in msg.text:
                     key = msg.text[-33:]
                     client.findAndAddContactsByMid(key)
