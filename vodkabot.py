@@ -39,7 +39,7 @@ def sendMessage(to, text, contentMetadata={}, contentType=0):
 
 def NOTIFIED_ADD_CONTACT(op):
     try:
-        sendMessage(op.param1, client.getContact(op.param1).displayName + "謝謝加好友")
+        sendMessage(op.param1, client.getContact(op.param1).displayName + "謝謝加好友")
     except Exception as e:
         print e
         print ("\n\nNOTIFIED_ADD_CONTACT\n\n")
@@ -60,7 +60,7 @@ tracer.addOpInterrupt(17,NOTIFIED_ACCEPT_GROUP_INVITATION)
 
 def NOTIFIED_KICKOUT_FROM_GROUP(op):
     try:
-        sendMessage(op.param1, client.getContact(op.param3).displayName + "活該被踢掰掰(*´･ω･*)/n" + datetime.datetime.today().strftime('%Y年%m月%d日 %H:%M:%S'))
+        sendMessage(op.param1, client.getContact(op.param3).displayName + "活該被踢(*´･ω･*)")
     except Exception as e:
         print e
         print ("\n\nNOTIFIED_KICKOUT_FROM_GROUP\n\n")
@@ -70,7 +70,7 @@ tracer.addOpInterrupt(19,NOTIFIED_KICKOUT_FROM_GROUP)
 
 def NOTIFIED_LEAVE_GROUP(op):
     try:
-        sendMessage(op.param1, client.getContact(op.param2).displayName + "終於滾了掰掰(*´･ω･*)/n" + datetime.datetime.today().strftime('%Y年%m月%d日 %H:%M:%S'))
+        sendMessage(op.param1, client.getContact(op.param2).displayName + " 終於滾了(*´･ω･*)")
     except Exception as e:
         print e
         print ("\n\nNOTIFIED_LEAVE_GROUP\n\n")
@@ -80,6 +80,44 @@ tracer.addOpInterrupt(15,NOTIFIED_LEAVE_GROUP)
 
 def NOTIFIED_READ_MESSAGE(op):
     #print op
+    try:
+        if op.param1 in wait['readPoint']:
+            Name = client.getContact(op.param2).displayName
+            if Name in wait['readMember'][op.param1]:
+                pass
+            else:
+                wait['readMember'][op.param1] += "\n・" + Name
+                wait['ROM'][op.param1][op.param2] = "・" + Name
+        else:
+            pass
+    except:
+        pass
+
+tracer.addOpInterrupt(55, NOTIFIED_READ_MESSAGE)
+
+def RECEIVE_MESSAGE(op):
+    msg = op.message
+    try:
+        if msg.contentType == 0:
+            try:
+                if msg.to in wait['readPoint']:
+                    if msg.from_ in wait["ROM"][msg.to]:
+                        del wait["ROM"][msg.to][msg.from_]
+                else:
+                    pass
+            except:
+                pass
+        else:
+            pass
+    except KeyboardInterrupt:
+	       sys.exit(0)
+    except Exception as error:
+        print error
+        print ("\n\nRECEIVE_MESSAGE\n\n")
+        return
+
+tracer.addOpInterrupt(26, RECEIVE_MESSAGE)
+
     try:
         if op.param1 in wait['readPoint']:
             Name = client.getContact(op.param2).displayName
