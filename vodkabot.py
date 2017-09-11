@@ -141,7 +141,7 @@ def SEND_MESSAGE(op):
 
                 if msg.text == "me":
                     sendMessage(msg.to, text=None, contentMetadata={'mid': msg.from_}, contentType=13)  
-                    sendMessage(msg.to, "08的友資記清楚啦\n" + "[此技術由詞語改編]")
+                    sendMessage(msg.to, "08的友資記清楚啦")
                 if msg.text == "gift":
                     sendMessage(msg.to, text="gift sent", contentMetadata=None, contentType=9)
                 else:
@@ -192,7 +192,7 @@ def SEND_MESSAGE(op):
                     key = msg.text[5:]
                     contact = client.getContact(key)
                     client.kickoutFromGroup(msg.to, [key])
-                    sendMessage(msg.to, ""+contact.displayName + "滾吧拉基\n" + "[此技術由詞語改編]")
+                    sendMessage(msg.to, ""+contact.displayName + "滾吧拉基")
 
                 if "#bye" in msg.text: 
                     gr = client.getGroup(msg.to)
@@ -208,10 +208,10 @@ def SEND_MESSAGE(op):
                     if key in Names:
                         kazu = Names.index(key) 
                         contact = client.getContact(Mids[kazu])
-                        sendMessage(msg.to, contact.displayName + "傻逼掰掰\n[此技術由詞語改編]")
+                        sendMessage(msg.to, contact.displayName + "傻逼掰掰")
                         client.kickoutFromGroup(msg.to, [""+Mids[kazu]+""])
                         contact = client.getContact(Mids[kazu])
-                        sendMessage(msg.to, contact.displayName + "已被槍斃\n[此技術由詞語改編]")
+                        sendMessage(msg.to, contact.displayName + "已被槍斃")
                     else:
                         sendMessage(msg.to, "↑↑↑↑↑↑↑↑↑↑↑↑↑↑\n沒這個人啦北七")
 
@@ -227,7 +227,7 @@ def SEND_MESSAGE(op):
                     M.contentType = 13
                     M.contentMetadata = {'mid': msg.from_}
                     client.sendMessage(M)
-                    sendMessage(msg.to, "08的友資記清楚啦\n" + "[此技術由詞語改編]")
+                    sendMessage(msg.to, "08的友資記清楚啦")
                 if "show:" in msg.text:
                     key = msg.text[-33:]
                     sendMessage(msg.to, text=None, contentMetadata={'mid': key}, contentType=13)
