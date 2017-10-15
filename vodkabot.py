@@ -191,7 +191,7 @@ def SEND_MESSAGE(op):
                 if "#bye" in msg.text: 
                     gr = client.getGroup(msg.to)
                     gr.name = "再見囉"
-                    client.updateGroup(gs)
+                    client.updateGroup(gr)
                     member = gr.members 
                     for g in member:
                       client.kickoutFromGroup(msg.to, [g.mid]) 
