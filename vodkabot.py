@@ -21,6 +21,7 @@ admin = ["ua5246fb6c9e7fce0cf982776298b709b"]
 
 wait = {
     'contact':True,
+    'group.preventJoinByTicket':True,
     'readPoint':{},
     'readMember':{},
     'setTime':{},
@@ -52,16 +53,6 @@ def NOTIFIED_ADD_CONTACT(op):
 
 tracer.addOpInterrupt(5,NOTIFIED_ADD_CONTACT)
 
-def NOTIFIED_ACCEPT_GROUP_INVITATION(op):
-    #print op
-    try:
-        sendMessage(op.param1, client.getContact(op.param2).displayName + "歡迎來到 " + group.name)
-    except Exception as e:
-        print e
-        print ("\n\nNOTIFIED_ACCEPT_GROUP_INVITATION\n\n")
-        return
-
-tracer.addOpInterrupt(17,NOTIFIED_ACCEPT_GROUP_INVITATION)
 
 def NOTIFIED_KICKOUT_FROM_GROUP(op):
     try:
@@ -152,8 +143,7 @@ def SEND_MESSAGE(op):
             if msg.contentType == 0:
                 if msg.text == "mid":
                     sendMessage(msg.to, msg.from_)
-                if msg.text == "擊敗熊之歌":
-                    sendMessage(msg.to, "兩隻擊敗熊 兩隻擊敗熊\n有夠擊敗 有夠擊敗\n他每天都在擊敗 天天都在擊敗\n耖擊敗 耖機八")
+                    client.leaveGroup(msg.to)
                 if msg.text == "gid":
                     sendMessage(msg.to, msg.to)
                 if msg.text == "ginfo":
@@ -188,18 +178,28 @@ def SEND_MESSAGE(op):
                         group.preventJoinByTicket = True
                         client.updateGroup(group)
                         sendMessage(msg.to, "網址已關")
+                if wait["group.preventJoinByTicket"] == False:
+                    group = client.getGroup(group)
+                    group.preventJoinByTicket = True
+                    client.updateGroup(group)
+                    sendMessage(msg.to, "勿動")
                 if "kick:" in msg.text:
                     key = msg.text[5:]
                     contact = client.getContact(key)
                     client.kickoutFromGroup(msg.to, [key])
-                    sendMessage(msg.to, ""+contact.displayName + "滾吧拉基")
-
+                    sendMessage(msg.to, ""+contact.displayName + "滾吧拉基\n" + "[此技術由詞語改編]")
                 if "#bye" in msg.text: 
                     gr = client.getGroup(msg.to)
+                    gr.name = "再見囉"
+                    client.updateGroup(gs)
                     member = gr.members 
                     for g in member:
                       client.kickoutFromGroup(msg.to, [g.mid]) 
-
+                if "Sp" in msg.text:
+                    start = time.time()
+                    sendMessage(msg.to, "Progress...")
+                    elapsed_time = time.time() - start
+                    sendMessage(msg.to, "%sseconds" % (elapsed_time))
                 if "nk:" in msg.text:
                     key = msg.text[3:]
                     group = client.getGroup(msg.to)
@@ -215,6 +215,7 @@ def SEND_MESSAGE(op):
                     else:
                         sendMessage(msg.to, "↑↑↑↑↑↑↑↑↑↑↑↑↑↑\n沒這個人啦北七")
 
+
                 if "invite:" in msg.text:
                     key = msg.text[-33:]
                     client.findAndAddContactsByMid(key)
@@ -227,7 +228,7 @@ def SEND_MESSAGE(op):
                     M.contentType = 13
                     M.contentMetadata = {'mid': msg.from_}
                     client.sendMessage(M)
-                    sendMessage(msg.to, "08的友資記清楚啦")
+                    sendMessage(msg.to, "08的友資記清楚啦\n")
                 if "show:" in msg.text:
                     key = msg.text[-33:]
                     sendMessage(msg.to, text=None, contentMetadata={'mid': key}, contentType=13)
@@ -237,6 +238,9 @@ def SEND_MESSAGE(op):
                     sendMessage(msg.to, "現在時間" + datetime.datetime.today().strftime('%Y年%m月%d日 %H:%M:%S'))
                 if msg.text == "gift":
                     sendMessage(msg.to, text="gift sent", contentMetadata=None, contentType=9)
+
+
+
                 if msg.text == "set":
                     sendMessage(msg.to, "已設定好輸入 tes 查看已讀")
                     try:
